@@ -17,5 +17,6 @@
   ```
 4. Run the test
   ```bash
+  ros2 run rmw_zenoh_cpp rmw_zenohd
   ./test.sh
   ```

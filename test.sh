@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 
-source /home/zstw/Workspace/benchmark_rmw_zenoh/install/setup.bash
+source install/setup.bash
 
 PING="./target/release/ping"
 PONG="./target/release/pong"

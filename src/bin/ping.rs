@@ -2,7 +2,7 @@ use futures::stream::StreamExt;
 use r2r::std_msgs::msg::MultiArrayLayout;
 use r2r::QosProfile;
 use std::sync::{
-    atomic::{AtomicBool, Ordering::SeqCst},
+    atomic::{AtomicBool, AtomicUsize, Ordering::SeqCst},
     Arc,
 };
 use anyhow::Result;
@@ -20,7 +20,6 @@ async fn main() -> Result<()> {
     let mut node = r2r::Node::create(ctx, "testnode", "")?;
 
     // let qos = QosProfile::default().reliable().transient_local();
-    // let qos = QosProfile::default();
     let mut qos = QosProfile::default();
     qos.depth = 1;
 
@@ -38,8 +37,10 @@ async fn main() -> Result<()> {
         }
     });
 
+    let counter = Arc::new(AtomicUsize::new(0));
     tokio::task::spawn({
         let is_running = is_running.clone();
+        let counter = counter.clone();
         async move {
             while is_running.load(SeqCst) {
                 let start = chrono::offset::Utc::now().timestamp_nanos_opt().unwrap();
@@ -52,6 +53,7 @@ async fn main() -> Result<()> {
                 };
 
                 publisher.publish(&msg)?;
+                counter.fetch_add(1, SeqCst);
             }
             anyhow::Ok(())
         }
@@ -82,6 +84,11 @@ async fn main() -> Result<()> {
         samples[(samples.len() as f64 * 0.95) as usize],
         sum as f64 / samples.len() as f64,
     );
+
+    let sent = counter.load(SeqCst);
+    let recv = samples.len();
+    let rate = recv as f64 / sent as f64 * 100.0;
+    println!("[ping] Recv rate {recv}/{sent} = {rate:.02}% messages");
 
     println!("[ping] Done");
     handle.await?;

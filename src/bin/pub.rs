@@ -1,10 +1,5 @@
-use futures::stream::StreamExt;
 use r2r::std_msgs::msg::MultiArrayLayout;
 use r2r::QosProfile;
-use std::sync::{
-    atomic::{AtomicBool, AtomicUsize, Ordering::SeqCst},
-    Arc,
-};
 use anyhow::Result;
 
 // type Message = r2r::std_msgs::msg::String;

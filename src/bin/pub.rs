@@ -1,6 +1,6 @@
+use anyhow::Result;
 use r2r::std_msgs::msg::MultiArrayLayout;
 use r2r::QosProfile;
-use anyhow::Result;
 
 // type Message = r2r::std_msgs::msg::String;
 type Message = r2r::std_msgs::msg::ByteMultiArray;

@@ -1,3 +1,4 @@
+use anyhow::Result;
 use futures::stream::StreamExt;
 use r2r::std_msgs::msg::MultiArrayLayout;
 use r2r::QosProfile;
@@ -5,7 +6,6 @@ use std::sync::{
     atomic::{AtomicBool, AtomicUsize, Ordering::SeqCst},
     Arc,
 };
-use anyhow::Result;
 
 // type Message = r2r::std_msgs::msg::String;
 type Message = r2r::std_msgs::msg::ByteMultiArray;
@@ -58,7 +58,6 @@ async fn main() -> Result<()> {
             anyhow::Ok(())
         }
     });
-
 
     println!("[ping] Started measuring for {TIMEOUT_SECS}(s)");
     let mut samples = Vec::with_capacity((TIMEOUT_SECS as f64 / 0.000002) as usize);
